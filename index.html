@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inonova – Dalsi Video Marketing</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:       #050508;
+      --deep:        #0a0a15;
+      --card:        #10101a;
+      --border:      #2a2a45;
+      --purple:      #8a2be2;
+      --purple-lite: #b060f0;
+      --red:         #ff1a35;
+      --red-dark:    #c8001a;
+      --white:       #ffffff;
+      --muted:       #a0a0c0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── BACKGROUND ─── */
+    .bg-wrap { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .bg-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(138,43,226,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(138,43,226,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    .bg-glow {
+      position: absolute; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(138,43,226,0.15) 0%, transparent 70%);
+      top: -200px; left: -100px; border-radius: 50%;
+    }
+
+    /* ─── NAVBAR ─── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 80px;
+      background: rgba(5,5,8,0.95);
+      border-bottom: 2px solid var(--purple);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+    }
+    .logo-name {
+      font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px;
+      color: var(--white); letter-spacing: 2px;
+    }
+    .logo-sub { font-size: 10px; color: var(--purple-lite); letter-spacing: 3px; text-transform: uppercase; display: block; }
+    .nav-badge { padding: 8px 16px; background: var(--purple); border-radius: 4px; font-weight: 800; font-size: 12px; color: #fff; }
+
+    /* ─── HERO SECTION ─── */
+    .hero {
+      position: relative; z-index: 10;
+      text-align: center;
+      padding: 100px 20px 60px;
+      background: linear-gradient(to bottom, rgba(5,5,8,1) 0%, rgba(5,5,8,0) 100%);
+    }
+    .hero-eyebrow {
+      color: var(--red); font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
+      font-size: 14px; margin-bottom: 20px; display: block;
+    }
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(40px, 8vw, 80px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      color: var(--white);
+    }
+    .hero-title span {
+      color: var(--red);
+      display: block;
+    }
+    .hero-desc {
+      font-size: 20px; color: var(--muted);
+      max-width: 700px; margin: 0 auto; line-height: 1.6;
+    }
+
+    /* ─── MAIN CARD ─── */
+    .main-card { max-width: 900px; margin: 0 auto 80px; padding: 0 20px; position: relative; z-index: 10; }
+    .card { background: var(--card); border: 2px solid var(--border); border-radius: 0; padding: 40px; box-shadow: 20px 20px 0px var(--purple); }
+    
+    .form-label { display: block; font-weight: 800; color: var(--purple-lite); text-transform: uppercase; margin-bottom: 12px; font-size: 14px; }
+    .form-input {
+      width: 100%; padding: 20px; background: #000; border: 2px solid var(--border);
+      color: #fff; font-size: 18px; outline: none; margin-bottom: 30px;
+    }
+    .form-input:focus { border-color: var(--purple); }
+
+    .script-box { background: #000; border: 1px solid var(--border); padding: 25px; margin-bottom: 30px; }
+    .script-text { font-family: monospace; line-height: 1.8; color: #ccc; font-size: 15px; }
+    .highlight { color: var(--red); font-weight: 800; background: rgba(255,26,53,0.1); padding: 2px 5px; }
+
+    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+    .form-select { width: 100%; padding: 15px; background: #000; border: 2px solid var(--border); color: #fff; cursor: pointer; }
+
+    .btn-submit {
+      width: 100%; padding: 25px; background: var(--red); color: #fff;
+      font-size: 20px; font-weight: 900; border: none; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 2px; transition: 0.2s;
+    }
+    .btn-submit:hover { background: #fff; color: #000; }
+    .btn-submit:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* ─── PROCESSING ─── */
+    .processing { text-align: center; padding: 60px; border: 4px dashed var(--purple); margin-top: 40px; }
+    .loader { width: 60px; height: 60px; border: 8px solid #222; border-top: 8px solid var(--red); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* ─── VIDEO RESULT ─── */
+    .video-container { margin-top: 40px; background: #000; padding: 20px; border: 2px solid var(--purple); }
+    video { width: 100%; display: block; }
+    .btn-download { display: inline-block; margin-top: 20px; padding: 15px 30px; background: var(--purple); color: #fff; text-decoration: none; font-weight: 800; }
+
+    @media (max-width: 600px) { .config-grid { grid-template-columns: 1fr; } .hero-title { font-size: 40px; } }
+  </style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState } = React;
+
+const SCRIPT_BASE = (name) => `Hi ${name}! Sharing exciting news from University of Bedfordshire. PG admissions are open for May and July intakes for Postgraduate courses like MSc Computer Science, MSc Cyber Security , or Project Management Data Analytics. 45% and 55% entry for degree course. For entry - Indian student minimum 70% in twelfth English. Scholarships up to five thousand Euros, 99% visa success rates, and PG accelerate option – perfect Options! Apply at beds.ac.uk asap! Your UK journey starts here! Thanks`;
+
+const VOICE_OPTIONS = [
+  { id: 'expr-voice-1-f', name: 'Female 1' },
+  { id: 'expr-voice-2-m', name: 'Male 1' },
+  { id: 'expr-voice-3-m', name: 'Male 2 (Default)' },
+  { id: 'expr-voice-4-f', name: 'Female 2' },
+  { id: 'expr-voice-5-f', name: 'Female 3' },
+  { id: 'expr-voice-6-m', name: 'Male 3' },
+  { id: 'expr-voice-7-f', name: 'Female 4' },
+  { id: 'expr-voice-8-m', name: 'Male 4' }
+];
+
+function App() {
+  const [name, setName] = useState('');
+  const [voice, setVoice] = useState('expr-voice-3-m');
+  const [speed, setSpeed] = useState('1.3');
+  const [loading, setLoading] = useState(false);
+  const [videoUrl, setVideoUrl] = useState(null);
+
+  const generate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setVideoUrl(null);
+    try {
+      const res = await fetch('https://api.neodalsi.com/video/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          student_name: name,
+          script: SCRIPT_BASE(name),
+          voice: voice,
+          speed: parseFloat(speed)
+        })
+      });
+      if (!res.ok) throw new Error("API request failed");
+      const blob = await res.blob();
+      setVideoUrl(URL.createObjectURL(blob));
+    } catch (err) {
+      alert("Error calling API. Please check your connection to api.neodalsi.com");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="page">
+      <div className="bg-wrap">
+        <div className="bg-grid"></div>
+        <div className="bg-glow"></div>
+      </div>
+
+      <nav className="navbar">
+        <div>
+          <span className="logo-name">INONOVA</span>
+          <span className="logo-sub">Dalsi Video Marketing</span>
+        </div>
+        <div className="nav-badge">STUDENT PORTAL</div>
+      </nav>
+
+      <header className="hero">
+        <span className="hero-eyebrow">Next-Gen Marketing</span>
+        <h1 className="hero-title">
+          PERSONALIZED
+          <span>VIDEO GENERATOR</span>
+        </h1>
+        <p className="hero-desc">Create high-impact marketing videos for students instantly with our AI engine.</p>
+      </header>
+
+      <main className="main-card">
+        <div className="card">
+          <form onSubmit={generate}>
+            <label className="form-label">Student Name</label>
+            <input 
+              className="form-input" 
+              placeholder="Type student name here..." 
+              value={name} 
+              onChange={e => setName(e.target.value)}
+              required
+            />
+
+            <label className="form-label">Script Preview</label>
+            <div className="script-box">
+              <p className="script-text">
+                {name ? (
+                  <>Hi <span className="highlight">{name}</span>! {SCRIPT_BASE('').slice(3)}</>
+                ) : (
+                  "Enter a name to preview the personalized script..."
+                )}
+              </p>
+            </div>
+
+            <div className="config-grid">
+              <div>
+                <label className="form-label">Select Voice</label>
+                <select className="form-select" value={voice} onChange={e => setVoice(e.target.value)}>
+                  {VOICE_OPTIONS.map(v => (
+                    <option key={v.id} value={v.id}>{v.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="form-label">Playback Speed</label>
+                <select className="form-select" value={speed} onChange={e => setSpeed(e.target.value)}>
+                  <option value="1.0">1.0x Normal</option>
+                  <option value="1.2">1.2x Fast</option>
+                  <option value="1.3">1.3x Brisk</option>
+                  <option value="1.5">1.5x Very Fast</option>
+                </select>
+              </div>
+            </div>
+
+            <button className="btn-submit" disabled={!name || loading}>
+              {loading ? "Generating..." : "Generate Video Now"}
+            </button>
+          </form>
+
+          {loading && (
+            <div className="processing">
+              <div className="loader"></div>
+              <h3>CREATING YOUR VIDEO</h3>
+              <p>Please wait while our AI renders the personalized content...</p>
+            </div>
+          )}
+
+          {videoUrl && (
+            <div className="video-container">
+              <video src={videoUrl} controls autoPlay />
+              <a href={videoUrl} download="video.mp4" className="btn-download">DOWNLOAD MP4</a>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
